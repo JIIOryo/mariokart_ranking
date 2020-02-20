@@ -53,13 +53,12 @@ def post_to_line_notify(message):
 
 
 def date_format(date_str):
-    date_str = date_str.replace('Z', '+00:00')
-    datetime_utc = datetime.datetime.fromisoformat(date_str)
-    datetime_jst = datetime_utc.astimezone(datetime.timezone(datetime.timedelta(hours=+9)))
+    datetime_utc = datetime.datetime.strptime( date_str.replace('.000Z', ''), '%Y-%m-%dT%H:%M:%S')
+    datetime_jst = datetime_utc + datetime.timedelta(hours=+9)
     return datetime_jst.strftime('%m/%d %H:%M')
 
 
-def post_message_generator(rank, score, ranking_started_at, ranking_finished_at):
+def post_message_generator(rank, score, ranking_started_at, ranking_finished_at, now):
     if rank == '0' and score == '0':
         ranking_message = 'ランキング圏外です。'
     else:
@@ -73,11 +72,14 @@ def post_message_generator(rank, score, ranking_started_at, ranking_finished_at)
 
 集計期間
 {ranking_started_at} ~ {ranking_finished_at}
+データ取得日時
+{now}
     '''.format(
         nickname = nickname,
         ranking_message = ranking_message,
         ranking_started_at = ranking_started_at,
         ranking_finished_at = ranking_finished_at,
+        now = now,
     )
     
 
@@ -111,7 +113,9 @@ def main():
             score = your_data['score'],
             ranking_started_at = date_format( ranking_period['ranking_started_at'] ),
             ranking_finished_at = date_format( ranking_period['ranking_finished_at']),
+            now = datetime.datetime.now().strftime('%m/%d %H:%M'),
         )
+        print(message)
         post_to_line_notify(message)
     else:
         # Ranking is not updated
