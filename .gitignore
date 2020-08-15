@@ -1,2 +1,7 @@
 env
 latest_rank.json
+config.json
+__pycache__
+
+html_example/*
+!.gitkeep
