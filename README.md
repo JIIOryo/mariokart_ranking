@@ -9,11 +9,12 @@
 sh init.sh
 ```
 
-
 ## 動作環境
 
+```
 python3.6
- 
+Ubuntu 18.04.2 LTS
+```
 
 ## 定期実行
 
